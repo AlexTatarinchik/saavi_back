@@ -22,5 +22,12 @@ def show_user_insides(user_id, date, type):
     return json.dumps(user_insides)
 
 
+@app.route('/user/popular_categories/<user_id>/<date>/<type>')
+def show_user_popular_categories(user_id, date, type):
+    # date: yyyy-mm-dd
+    user_insides = data_analyser.get_popular_categories(int(escape(user_id)), escape(date), escape(type))
+    return json.dumps(user_insides)
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0")
