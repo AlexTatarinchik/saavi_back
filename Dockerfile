@@ -17,12 +17,14 @@ RUN curl -s https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
     rm get-pip.py
 
 # Copy saavi code
-COPY * /app/
+COPY . /app/
 WORKDIR /app
+
+RUN ls -la /app
 
 # Building python requirements
 RUN pip install -r requirements.txt
 EXPOSE 5000
 
 ENTRYPOINT [ "python" ]
-CMD [ "test.py" ]
+CMD [ "run_app.py" ]
