@@ -10,10 +10,11 @@ from data_analisys import paths
 def download_data():
     wget.download(paths.raw_data_web_path, paths.raw_zipped_data_path)
     with zipfile.ZipFile(paths.raw_zipped_data_path, "r") as zip_ref:
-        zip_ref.extractall(paths.raw_data_path)
+        zip_ref.extractall(paths.raw_data_directory)
 
 
-def fake_category(data):
+def generate_category(data):
+    randomizer = np.random.RandomState(42)
     category_names = np.array([
         'Eatery',
         'Restaurants',
@@ -61,9 +62,9 @@ def fake_category(data):
     probs_ = category_probs.copy()
     for i in range(len(account_probs)):
         if counts_account[i] > 16:
-            value = np.random.choice(np.arange(3), p=probs_[:3] / probs_[:3].sum())
+            value = randomizer.choice(np.arange(3), p=probs_[:3] / probs_[:3].sum())
         else:
-            value = np.random.choice(np.arange(probs_.shape[0]), p=probs_ / probs_.sum())
+            value = randomizer.choice(np.arange(probs_.shape[0]), p=probs_ / probs_.sum())
         probs_[value] -= account_probs[i]
         probs_[value] = max(0, probs_[value])
         account_bins[i] = value
@@ -83,8 +84,31 @@ def fake_category(data):
     return data
 
 
+def process_date(data):
+    data['timestamp'] = pd.to_datetime(data.timestamp)
+    return data
+
+
 def postprocess_data():
     data = pd.read_csv(paths.raw_data_path, sep=';')
-    data = fake_category(data)
+    data = generate_category(data)
+    data = process_date(data)
     data.to_csv(paths.post_processed_data_path, index=False)
     return data
+
+
+def set_types(data):
+    data = process_date(data)
+    return data
+
+
+def generate_ids(data):
+    unique_users = data.accountName.unique()
+    unique_users_num = unique_users.shape[0]
+    ids = np.arange(unique_users_num).astype(int)
+    return {id: name for id, name in zip(ids, unique_users)}
+
+
+def generate_health_score(number):
+    randomizer = np.random.RandomState(42)
+    return randomizer.rand(number) * 5
