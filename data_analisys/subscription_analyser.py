@@ -3,10 +3,9 @@ import numpy as np
 
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
-from datetime import datetime
+
 
 from data_analisys import paths
-
 
 
 class SubscribtionAnalyser:
