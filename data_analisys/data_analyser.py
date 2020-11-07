@@ -102,7 +102,8 @@ class DataAnalyser:
         if name in self.category_image_dict:
             image_name = self.category_image_dict[name]
         else:
-            image_name = ""
+            category_name = current_time_slice[current_time_slice[group] == name]['category'].iloc[0]
+            image_name = self.category_image_dict[category_name]
 
         return_dict = {
             'image_name': image_name,
