@@ -31,11 +31,13 @@ class DataAnalyser:
         user_health = self.user_health_dict[user_id]
         user_avatar_url = ""
         user_balance = self.get_user_balance(user_name)
+        user_month_subscribtion_payment = 0
         return {
             'user_name': user_name,
             'user_health': user_health,
             'user_avatar_url': user_avatar_url,
-            'user_balance': user_balance
+            'user_balance': user_balance,
+            'user_month_subscribtion_payment': user_month_subscribtion_payment
         }
 
 
