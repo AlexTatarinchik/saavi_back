@@ -3,6 +3,7 @@ import os
 import pandas as pd
 
 from data_analisys import paths, utils
+from datetime import datetime, timedelta
 
 
 class DataAnalyser:
@@ -13,6 +14,7 @@ class DataAnalyser:
         self.data = utils.set_types(self.data)
         self.user_name_dict = utils.generate_ids(self.data)
         self.user_health_dict = utils.generate_health_score(len(self.user_name_dict))
+        self.category_image_dict = utils.get_category_image_dict()
 
     def _download_and_postprocess_data(self):
         utils.download_data()
@@ -40,6 +42,75 @@ class DataAnalyser:
             'user_month_subscribtion_payment': user_month_subscribtion_payment
         }
 
+    def _get_insides(self, account_slice, reference_datetime, previous_datetime_end, previous_datetime_start, group, choose_by_freq):
+        current_time_slice = account_slice[
+            (account_slice.timestamp > previous_datetime_end) & (account_slice.timestamp < reference_datetime)]
+        previous_time_slice = account_slice[
+            (account_slice.timestamp > previous_datetime_start) & (account_slice.timestamp < previous_datetime_end)]
+
+        current_spendings = current_time_slice.groupby(group).amount.sum() * -1
+        previous_spendings = previous_time_slice.groupby(group).amount.sum() * -1
+        spendings_delta = current_spendings - previous_spendings
+        counts = current_time_slice.groupby(group).amount.count()
+        if not choose_by_freq:
+            argmax = spendings_delta.argmax()
+            name = spendings_delta.index[argmax]
+        else:
+            argmax = counts.argmax()
+            name = counts.index[argmax]
+        change = spendings_delta.loc[name]/previous_spendings.loc[name] - 1
+
+        if name in self.category_image_dict:
+            image_name = self.category_image_dict
+        else:
+            image_name = ""
+
+        return_dict = {
+            'image_name': image_name,
+            'amount': current_spendings[name],
+            'number_of_transactions': int(counts[name]),
+            'name': name,
+            'change': float(change),
+        }
+        return return_dict
+
+    def get_insides(self, user_id, date, type):
+        reference_datetime = datetime.strptime(date, '%Y-%m-%d')
+        if type == 'day':
+            previous_datetime_end = reference_datetime - timedelta(days=1)
+            previous_datetime_start = previous_datetime_end - timedelta(days=1)
+        elif type == 'week':
+            previous_datetime_end = reference_datetime - timedelta(weeks=1)
+            previous_datetime_start = previous_datetime_end - timedelta(weeks=1)
+        elif type == 'month':
+            previous_datetime_end = reference_datetime - timedelta(weeks=4)
+            previous_datetime_start = previous_datetime_end - timedelta(weeks=4)
+
+        user_name = self.user_name_dict[user_id]
+        account_slice = self._get_user_slice(user_name)
+
+        more_of_brand = self._get_insides(
+            account_slice,
+            reference_datetime,
+            previous_datetime_end,
+            previous_datetime_start,
+            group='counterpartyAccountName',
+            choose_by_freq=True,
+        )
+
+        more_of_category = self._get_insides(
+            account_slice,
+            reference_datetime,
+            previous_datetime_end,
+            previous_datetime_start,
+            group='category',
+            choose_by_freq=False,
+        )
+
+        return {
+            'more_of_brand': more_of_brand,
+            'more_of_category': more_of_category
+        }
 
 
 

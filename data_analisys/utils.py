@@ -86,6 +86,10 @@ def generate_category(data):
 
 def process_date(data):
     data['timestamp'] = pd.to_datetime(data.timestamp)
+    data['year'] = data.paymentDate.apply(lambda x: str(x).split('-')[0])
+    data['month'] = data.paymentDate.apply(lambda x: str(x).split('-')[1])
+    data['day'] = data.paymentDate.apply(lambda x: str(x).split('-')[2])
+    data['year_month'] = data['year'] + '_' + data['month']
     return data
 
 
@@ -112,3 +116,23 @@ def generate_ids(data):
 def generate_health_score(number):
     randomizer = np.random.RandomState(42)
     return randomizer.rand(number) * 5
+
+
+def get_category_image_dict():
+    return {
+        'Eatery': '1.png',
+        'Restaurants': '3.png',
+        'Shopping': '14.png',
+        'Additional': '5.png',
+        'Transport': '20.png',
+        'Housing': '7.png',
+        'Music': '21.png',
+        'Tourism': '9.png',
+        'Pets': '11.png',
+        'Children': '12.png',
+        'Cultural entertainment': '13.png',
+        'Wellness beauty': '15.png',
+        'Health': '16.png',
+        'Hobbies': '17.png',
+        'Insurance': '19.png'
+    }
