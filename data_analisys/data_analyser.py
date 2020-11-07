@@ -63,7 +63,7 @@ class DataAnalyser:
         spendings_delta = current_spendings - previous_spendings
         counts = current_time_slice.groupby(group).amount.count()
 
-        argsort = spendings_delta.argsort()
+        argsort = current_spendings.argsort()[::-1]
         return_array = []
         for index in argsort:
             name = spendings_delta.index[index]
