@@ -32,6 +32,8 @@ class DataAnalyser:
         user_name = self.user_name_dict[user_id]
         user_health = self.user_health_dict[user_id]
         user_avatar_url = ""
+        if user_id == 1:
+            user_avatar_url = '/images/Obsession-Joaquin-Phoenix-Her-Header-11217.jpg'
         user_balance = self.get_user_balance(user_name)
         user_month_subscribtion_payment = 0
         return {
