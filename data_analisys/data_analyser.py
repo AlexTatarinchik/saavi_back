@@ -38,6 +38,8 @@ class DataAnalyser:
         user_avatar_url = ""
         if user_id == 1:
             user_avatar_url = '/images/Obsession-Joaquin-Phoenix-Her-Header-11217.jpg'
+        if user_id == 2:
+            user_avatar_url = '/images/800.jpg'
         user_balance = self.get_user_balance(user_name)
         user_month_subscribtion_payment = 0
         return {
