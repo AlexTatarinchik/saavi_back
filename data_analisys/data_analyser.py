@@ -117,6 +117,12 @@ class DataAnalyser:
         return return_dict
 
     def get_popular_categories(self, user_id, date, type):
+        user_name = self.user_name_dict[user_id]
+        account_slice = self._get_user_slice(user_name)
+
+        if date == "last":
+            max_date = account_slice.timestamp.max()
+            date = f'{max_date.year}-{max_date.month}-{max_date.day}'
         reference_datetime = datetime.strptime(date, '%Y-%m-%d')
         if type == 'day':
             previous_datetime_end = reference_datetime - timedelta(days=1)
@@ -128,8 +134,7 @@ class DataAnalyser:
             previous_datetime_end = reference_datetime - timedelta(weeks=4)
             previous_datetime_start = previous_datetime_end - timedelta(weeks=4)
 
-        user_name = self.user_name_dict[user_id]
-        account_slice = self._get_user_slice(user_name)
+
         return self._get_most_popular_categories(
             account_slice,
             reference_datetime,
@@ -138,6 +143,13 @@ class DataAnalyser:
         )
 
     def get_insides(self, user_id, date, type):
+        user_name = self.user_name_dict[user_id]
+        account_slice = self._get_user_slice(user_name)
+
+        if date == "last":
+            max_date = account_slice.timestamp.max()
+            date = f'{max_date.year}-{max_date.month}-{max_date.day}'
+
         reference_datetime = datetime.strptime(date, '%Y-%m-%d')
         if type == 'day':
             previous_datetime_end = reference_datetime - timedelta(days=1)
@@ -148,9 +160,6 @@ class DataAnalyser:
         elif type == 'month':
             previous_datetime_end = reference_datetime - timedelta(weeks=4)
             previous_datetime_start = previous_datetime_end - timedelta(weeks=4)
-
-        user_name = self.user_name_dict[user_id]
-        account_slice = self._get_user_slice(user_name)
 
         more_of_brand = self._get_insides(
             account_slice,
