@@ -3,8 +3,10 @@ import numpy as np
 
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
+from datetime import datetime
 
 from data_analisys import paths
+
 
 
 class SubscribtionAnalyser:
@@ -58,11 +60,15 @@ class SubscribtionAnalyser:
                 'service category': user_slice.iloc[i].service_category,
                 'amount': (user_slice.iloc[i].price_min + user_slice.iloc[i].price_max) / 2,
                 'is_avarage': str(user_slice.iloc[i].price_min != user_slice.iloc[i].price_max),
-                'next_payment_date': int(user_slice.iloc[i].date_of_payment)
+                'next_payment_date': int(user_slice.iloc[i].date_of_payment),
+                'total_spend': (user_slice.iloc[i].number_of_payments *
+                                (user_slice.iloc[i].price_min + user_slice.iloc[i].price_max) / 2),
+                'next_charge': f'{2020}-{11 + (user_slice.iloc[i].date_of_payment < 8)}-{user_slice.iloc[i].date_of_payment}'
             }
             for i in range(user_slice.shape[0])
         ]
-        return result_list
+        argsort = np.argsort([res['total_spend'] for res in result_list])[::-1]
+        return [result_list[i] for i in argsort]
 
     def get_next_two_subscriptions(self, val_user, current_day):
         active_subscriptions = self.get_active_subscriptions(val_user)
