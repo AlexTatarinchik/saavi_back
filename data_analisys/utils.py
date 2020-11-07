@@ -136,3 +136,9 @@ def get_category_image_dict():
         'Hobbies': '17.png',
         'Insurance': '19.png'
     }
+
+
+def subscription_id_dict(number):
+    ids = np.arange(number).astype(int)
+    ids[1] = 216
+    return ids

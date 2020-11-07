@@ -5,6 +5,8 @@ import pandas as pd
 from data_analisys import paths, utils
 from datetime import datetime, timedelta
 
+from data_analisys.subscription_analyser import SubscribtionAnalyser
+
 
 class DataAnalyser:
     def __init__(self):
@@ -15,6 +17,8 @@ class DataAnalyser:
         self.user_name_dict = utils.generate_ids(self.data)
         self.user_health_dict = utils.generate_health_score(len(self.user_name_dict))
         self.category_image_dict = utils.get_category_image_dict()
+        self.subscribtion_analyser = SubscribtionAnalyser()
+        self.subscription_id_dict = utils.subscription_id_dict(len(self.user_name_dict))
 
     def _download_and_postprocess_data(self):
         utils.download_data()
@@ -183,6 +187,18 @@ class DataAnalyser:
             'more_of_brand': more_of_brand,
             'more_of_category': more_of_category
         }
+
+    def get_user_subscrption_prediction(self, user_id):
+        sub_user_id = self.subscription_id_dict[user_id]
+        return self.subscribtion_analyser.predict_user(sub_user_id)
+
+    def get_active_subscriptions(self, user_id):
+        sub_user_id = self.subscription_id_dict[user_id]
+        return self.subscribtion_analyser.get_active_subscriptions(sub_user_id)
+
+    def get_next_two_subscriptions(self, user_id, current_day=8):
+        sub_user_id = self.subscription_id_dict[user_id]
+        return self.subscribtion_analyser.get_next_two_subscriptions(sub_user_id, current_day)
 
 
 

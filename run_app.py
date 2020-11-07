@@ -29,10 +29,27 @@ def show_user_popular_categories(user_id, date, type):
     return json.dumps(user_insides)
 
 
+@app.route('/user/subscription_prediction/<user_id>/')
+def subscription_prediction(user_id):
+    user_insides = data_analyser.get_user_subscrption_prediction(int(escape(user_id)))
+    return json.dumps(user_insides)
+
+
+@app.route('/user/active_subscriptions/<user_id>/')
+def active_subscriptions(user_id):
+    user_insides = data_analyser.get_active_subscriptions(int(escape(user_id)))
+    return json.dumps(user_insides)
+
+
+@app.route('/user/next_two_subscriptions/<user_id>/')
+def next_two_subscriptions(user_id):
+    user_insides = data_analyser.get_next_two_subscriptions(int(escape(user_id)))
+    return json.dumps(user_insides)
+
+
 @app.route('/images/<name>')
 def send_image(name):
     # date: yyyy-mm-dd
-
     return send_file(f"resourses/{name}")
 
 

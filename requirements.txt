@@ -3,3 +3,4 @@ numpy
 pandas
 wget
 markupsafe
+scikit-learn

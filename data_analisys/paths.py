@@ -12,3 +12,5 @@ raw_data_web_path = 'https://sandbox.apis.op-palvelut.fi/junction/v2020/datasets
 
 zip_file_path = current_path + '/../data/final_transaction_table.csv.zip'
 post_processed_data_path = current_path + '/../data/final_transaction_table_post_processed.csv'
+
+subscription_dataset_path = current_path + '/../resourses/new_sub.csv'
