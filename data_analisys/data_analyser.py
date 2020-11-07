@@ -41,13 +41,33 @@ class DataAnalyser:
         if user_id == 2:
             user_avatar_url = '/images/800.jpg'
         user_balance = self.get_user_balance(user_name)
-        user_month_subscribtion_payment = 0
+
+        sub_user_id = self.subscription_id_dict[user_id]
+        user_month_subscribtion_payment = self.subscribtion_analyser.get_month_subscription_payment(sub_user_id)
+
+        account_slice = self._get_user_slice(user_name)
+
+        max_date = account_slice.timestamp.max()
+        date = f'{max_date.year}-{max_date.month}-{max_date.day}'
+        reference_datetime = datetime.strptime(date, '%Y-%m-%d')
+        previous_datetime_end = reference_datetime - timedelta(weeks=4)
+        previous_datetime_start = previous_datetime_end - timedelta(weeks=4)
+        current_time_slice = account_slice[
+            (account_slice.timestamp > previous_datetime_end) & (account_slice.timestamp < reference_datetime)]
+        previous_time_slice = account_slice[
+            (account_slice.timestamp > previous_datetime_start) & (account_slice.timestamp < previous_datetime_end)]
+        current_spend = current_time_slice.amount.sum() * -1
+        previous_spend = previous_time_slice.amount.sum() * -1
+        change = current_spend / previous_spend - 1
+
         return {
             'user_name': user_name,
             'user_health': user_health,
             'user_avatar_url': user_avatar_url,
             'user_balance': user_balance,
-            'user_month_subscribtion_payment': user_month_subscribtion_payment
+            'user_month_subscribtion_payment': user_month_subscribtion_payment,
+            'user_spend_this_month': current_spend,
+            'spend_change': change,
         }
 
     def _get_most_popular_categories(self, account_slice, reference_datetime, previous_datetime_end, previous_datetime_start):

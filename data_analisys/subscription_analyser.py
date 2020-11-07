@@ -78,3 +78,7 @@ class SubscribtionAnalyser:
             sort = np.argsort(next_subscriptions_date_list)
             return [active_subscriptions[sort[0]], active_subscriptions[sort[1]]]
         return active_subscriptions
+
+    def get_month_subscription_payment(self, val_user):
+        active_subscriptions = self.get_active_subscriptions(val_user)
+        return sum([active_subscription['amount'] for active_subscription in active_subscriptions])
