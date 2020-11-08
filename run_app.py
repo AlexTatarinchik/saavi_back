@@ -57,7 +57,7 @@ def send_stores(user_id):
         'm': '/images/3.png',
         's': '/images/5.png',
         't': '/images/1.png',
-        'sv': '/images/2.mp4',
+        'sv': 'https://github.com/azimin/JustVideo/raw/master/Stor2.mp4',
         'si': '/images/4.png',
     }]
     return json.dumps(result)
