@@ -49,8 +49,16 @@ def next_two_subscriptions(user_id):
 
 @app.route('/images/<name>')
 def send_image(name):
-    # date: yyyy-mm-dd
     return send_file(f"resourses/{name}")
+
+@app.route('/stories/>')
+def send_stores():
+    result = {
+        'money_go': '/images/Money Goes.png',
+        'subscriptions': '/images//Subscriptions.png',
+        'try_ar': '/images/AR.png'
+    }
+    return json.dumps(result)
 
 
 if __name__ == '__main__':
