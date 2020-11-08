@@ -20,8 +20,10 @@ class SubscribtionAnalyser:
         features = pd.DataFrame(features, columns=['user_id'] + list(ohe.get_feature_names()))
 
         self.model_dict = {}
+        self.service_category_dict = {}
         for service_name in self.data.service_name.unique():
             service_mask = self.data.service_name != service_name
+            self.service_category_dict[service_name] = self.data[~service_mask].service_category.values[0]
             train_features = features[service_mask]
             train_features = train_features.groupby('user_id').sum()
             prediction_users = self.data.user_id[~service_mask].unique()
@@ -49,7 +51,14 @@ class SubscribtionAnalyser:
 
         sort = np.argsort(prediction_list)[::-1]
         key_list = np.array(key_list)
-        return [*key_list[sort][:n]]
+        prediction_list = np.array(prediction_list)
+        return [
+            {
+                'service_name': key,
+                'score': prediction_score,
+                'service_category':self.service_category_dict[key]
+            } for key, prediction_score in zip(key_list[sort][:n], prediction_list[sort][:n])
+        ]
 
     def get_active_subscriptions(self, val_user):
         user_slice = self.data[self.data.user_id == val_user]
