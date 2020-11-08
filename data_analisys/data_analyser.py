@@ -70,7 +70,8 @@ class DataAnalyser:
             'spend_change': change,
         }
 
-    def _get_most_popular_categories(self, account_slice, reference_datetime, previous_datetime_end, previous_datetime_start):
+    def _get_most_popular_categories(self, account_slice, reference_datetime, previous_datetime_end,
+                                     previous_datetime_start):
         group = 'category'
         current_time_slice = account_slice[
             (account_slice.timestamp > previous_datetime_end) & (account_slice.timestamp < reference_datetime)]
@@ -105,7 +106,8 @@ class DataAnalyser:
             return_array.append(return_dict)
         return return_array
 
-    def _get_insides(self, account_slice, reference_datetime, previous_datetime_end, previous_datetime_start, group, choose_by_freq):
+    def _get_insides(self, account_slice, reference_datetime, previous_datetime_end, previous_datetime_start, group,
+                     choose_by_freq):
         current_time_slice = account_slice[
             (account_slice.timestamp > previous_datetime_end) & (account_slice.timestamp < reference_datetime)]
         previous_time_slice = account_slice[
@@ -125,7 +127,7 @@ class DataAnalyser:
         else:
             argmax = counts.argmax()
             name = counts.index[argmax]
-        change = current_spendings.loc[name]/previous_spendings.loc[name] - 1
+        change = current_spendings.loc[name] / previous_spendings.loc[name] - 1
 
         if name in self.category_image_dict:
             image_name = self.category_image_dict[name]
@@ -159,7 +161,6 @@ class DataAnalyser:
         elif type == 'month':
             previous_datetime_end = reference_datetime - timedelta(weeks=4)
             previous_datetime_start = previous_datetime_end - timedelta(weeks=4)
-
 
         return self._get_most_popular_categories(
             account_slice,
@@ -218,13 +219,6 @@ class DataAnalyser:
         sub_user_id = self.subscription_id_dict[user_id]
         return self.subscribtion_analyser.get_active_subscriptions(sub_user_id)
 
-    def get_next_two_subscriptions(self, user_id, current_day=6):
+    def get_next_two_subscriptions(self, user_id, current_day=8):
         sub_user_id = self.subscription_id_dict[user_id]
         return self.subscribtion_analyser.get_next_two_subscriptions(sub_user_id, current_day)
-
-
-
-
-
-
-
