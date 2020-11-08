@@ -218,7 +218,7 @@ class DataAnalyser:
         sub_user_id = self.subscription_id_dict[user_id]
         return self.subscribtion_analyser.get_active_subscriptions(sub_user_id)
 
-    def get_next_two_subscriptions(self, user_id, current_day=8):
+    def get_next_two_subscriptions(self, user_id, current_day=6):
         sub_user_id = self.subscription_id_dict[user_id]
         return self.subscribtion_analyser.get_next_two_subscriptions(sub_user_id, current_day)
 
