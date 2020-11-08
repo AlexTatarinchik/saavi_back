@@ -12,6 +12,7 @@ class SubscribtionAnalyser:
     def __init__(self):
         self.data = pd.read_csv(paths.subscription_dataset_path, sep=';')
         self.data.at[1057, 'date_of_payment'] = 9
+        self.data.at[1061, 'date_of_payment'] = 10
         ohe = OneHotEncoder()
 
         one_hot_features = ohe.fit_transform(self.data[['service_name', 'service_category']]).toarray()
