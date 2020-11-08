@@ -54,11 +54,11 @@ def send_image(name):
 @app.route('/user/stories/<user_id>')
 def send_stores(user_id):
     result = [{
-        'money_go': '/images/3.png',
-        'subscriptions': '/images/5.png',
-        'try_ar': '/images/1.png',
-        'stories_video': '/images/2.mp4',
-        'stories_image': '/images/4.png',
+        'm': '/images/3.png',
+        's': '/images/5.png',
+        't': '/images/1.png',
+        'sv': '/images/2.mp4',
+        'si': '/images/4.png',
     }]
     return json.dumps(result)
 
