@@ -51,8 +51,8 @@ def next_two_subscriptions(user_id):
 def send_image(name):
     return send_file(f"resourses/{name}")
 
-@app.route('/stories/')
-def send_stores():
+@app.route('/user/stories/<user_id>')
+def send_stores(user_id):
     result = {
         'money_go': '/images/Money Goes.png',
         'subscriptions': '/images/Subscriptions.png',
